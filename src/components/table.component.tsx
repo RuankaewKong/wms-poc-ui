@@ -26,13 +26,14 @@ import React, { useState } from 'react';
 
 type Product = (typeof product)[0];
 
+
 const statusColorMap: Record<string, ChipProps['color']> = {
   Active: 'success',
   Paused: 'danger',
   Vacation: 'warning',
 };
 
-const TableView: React.FC = () => {
+const TableView: React.FC = (data) => {
   type Selection = Set<string> | "all" |any;
 
   const [search, setSearch] = React.useState('');
@@ -87,7 +88,7 @@ const TableView: React.FC = () => {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem>View</DropdownItem>
+                <DropdownItem >View</DropdownItem>
                 <DropdownItem>Edit</DropdownItem>
                 <DropdownItem>Delete</DropdownItem>
               </DropdownMenu>
@@ -149,22 +150,17 @@ const TableView: React.FC = () => {
               </DropdownMenu>
             </Dropdown>
           </div>
-          <div className="flex items-center">
-            <Button className="w-fit" endContent={<PlusIcon />}>
-              Add New
-            </Button>
-          </div>
         </div>
       </div>
 
       <Table
         aria-label="Example table with dynamic content"
         classNames={{
-          base: ['max-h-[650px]','h-[750px'],
+          base: 'max-h-[850px]',
           table: 'min-h-[20px]',
 
         }}
-        className="h-[650px]"
+        className="h-[800px]"
         isHeaderSticky
         // onSelectionChange={setSelectedKeys}
         selectedKeys={selectedKeys}

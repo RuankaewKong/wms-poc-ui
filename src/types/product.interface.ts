@@ -1,14 +1,14 @@
-export type Product  ={
+export interface Product {
   id: string
   image: string
   barcode: string
   bookNo: string
   bookName: string
-  quantity: string
+  quantity: number
   status: string
-  createAt: string
-  updateAt: string
-  deleteAt: string
+  createAt: Date
+  updateAt: Date
+  deleteAt: Date
 
 }
 

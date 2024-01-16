@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <DrawerView />
 
         {/* <Card className="col-span-5 ... overflow-y-scroll mr-5 shadow-none bg-gray-100" style={{height: "900px"}}>{children}</Card> */}
-        <div className="bg-gray-100 mr-5 rounded-2xl col-span-5 ..." style={{height: "740px"}}>{children}</div>
+        <div className="bg-gray-100 mr-5 rounded-2xl col-span-5 ..." style={{height: "900px"}}>{children}</div>
       </body>
     </html>
   );
