@@ -25,7 +25,7 @@ const DrawerView: React.FC<Props> = ({ onClick }) => {
               startContent={<CartIcon />}
 
             >
-              Orders
+              Delivery
             </Button>
           </li>
           <li className="mx-5 mt-3 ">

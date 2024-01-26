@@ -5,6 +5,7 @@ import HeaderView from '@/components/header.component';
 import Image from 'next/image';
 import DrawerView from '@/components/drawer.component';
 import { Card } from '@nextui-org/react';
+import ModalView from '@/components/modal.component';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="grid grid-cols-6 gap-x-2 ">
         <HeaderView />
         <DrawerView />
+       
 
         {/* <Card className="col-span-5 ... overflow-y-scroll mr-5 shadow-none bg-gray-100" style={{height: "900px"}}>{children}</Card> */}
         <div className="bg-gray-100 mr-5 rounded-2xl col-span-5 ..." style={{height: "900px"}}>{children}</div>

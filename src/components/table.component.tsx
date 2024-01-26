@@ -1,5 +1,5 @@
 import Product from '@/app/wms/product/page';
-import { columns, product, statusOptions } from '@/assets/json/product';
+import { columns, product, statusOptions } from '@/assets/data/product';
 import { ChevronDownIcon } from '@/icon/ChevronDownIcon';
 import { PlusIcon } from '@/icon/PlusIcon';
 import { SearchIcon } from '@/icon/SearchIcon';
@@ -20,12 +20,19 @@ import {
   DropdownItem,
   Chip,
   ChipProps,
+  useDisclosure,
+  BreadcrumbItem,
+  Breadcrumbs,
+  Link,
 } from '@nextui-org/react';
 
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
+import { PressEvent } from 'react-aria';
+import ModalView from './modal.component';
+import { Itim } from 'next/font/google';
+import { Order } from '@/types/order.interface';
 
 type Product = (typeof product)[0];
-
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   Active: 'success',
@@ -33,39 +40,56 @@ const statusColorMap: Record<string, ChipProps['color']> = {
   Vacation: 'warning',
 };
 
-const TableView: React.FC = (data) => {
-  type Selection = Set<string> | "all" |any;
+interface Header {
+  key: string;
+  label: string;
+}
+
+interface TableProps<T> {
+  title: Header[];
+  data: T[];
+  page: string;
+  onRowClick: (item: T) => void;
+}
+
+const TableView = <T extends Product | Order>({ title, data, page, onRowClick }: TableProps<T>) => {
+  type Selection = Set<string> | 'all' | any;
+  const {  onOpen } = useDisclosure();
 
   const [search, setSearch] = React.useState('');
   const hasSearchFilter = Boolean(search);
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
   const [statusFilter, setStatusFilter] = React.useState<Selection>('all');
   const filteredItems = React.useMemo(() => {
-    let filteredProducts = [...product];
+    let filteredData = [...data];
 
     if (hasSearchFilter) {
-      filteredProducts = filteredProducts.filter((product) =>
-        product.bookName.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-    if (statusFilter !=='all' && Array.from(statusFilter).length !== statusOptions.length) {
-      filteredProducts = filteredProducts.filter((product) =>
-        Array.from(statusFilter).includes(product.status)
+      filteredData = filteredData.filter((item) =>
+        item.bookName.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    return filteredProducts;
-  }, [product, search, statusFilter]);
+    if (statusFilter !== 'all' && Array.from(statusFilter).length !== statusOptions.length) {
+      filteredData = filteredData.filter((item) => Array.from(statusFilter).includes(item.status));
+    }
 
-  const renderCell = React.useCallback((product: Product, columnKey: React.Key) => {
-    const cellValue = product[columnKey as keyof Product];
+    return filteredData;
+  }, [data, search, statusFilter]);
+  // Function to handle row click
+  const handleRowClick = (item: T) => {
+    onRowClick(item);
+    onOpen(); // Open the modal
+  };
+
+  const renderCell = React.useCallback((item: T, columnKey: React.Key) => {
+    const cellValue = item[columnKey as keyof T];
 
     switch (columnKey) {
       case 'status':
         return (
           <Chip
             className="capitalize border-none gap-1 text-default-600"
-            color={statusColorMap[product.status]}
+            color={statusColorMap[item.status]}
             size="sm"
             variant="dot"
           >
@@ -88,7 +112,7 @@ const TableView: React.FC = (data) => {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem >View</DropdownItem>
+                <DropdownItem onPress={() => handleRowClick(item)}>View</DropdownItem>
                 <DropdownItem>Edit</DropdownItem>
                 <DropdownItem>Delete</DropdownItem>
               </DropdownMenu>
@@ -109,46 +133,62 @@ const TableView: React.FC = (data) => {
   }, []);
 
   return (
-    <div className="flex flex-col justify-end gap-4 m-5">
+    <div className="flex flex-col gap-4 m-5">
       <div className="flex justify-between">
-        <div className="flex gap-3 w-2/5">
-          <Input
-            classNames={{
-              base: 'w-auto sm:max-w-[44%]',
-              inputWrapper: 'border-1',
-            }}
-            placeholder="Search by name..."
-            size="md"
-            labelPlacement="outside"
-            color="primary"
-            value={search}
-            endContent={<SearchIcon />}
-            onClear={() => setSearch('')}
-            onValueChange={onSearchChange}
-          />
+        <div className="flex flex-col">
+          <div className=" justify-start justify-evenly text-3xl font-bold">{page}</div>
+          <div className="flex flex-col justify-start justify-evenly">
+            <Breadcrumbs>
+              <BreadcrumbItem>Home</BreadcrumbItem>
+              <BreadcrumbItem>Product</BreadcrumbItem>
+            </Breadcrumbs>
+          </div>
+        </div>
+        <div className="flex flex-col justify-end">
+          <div className="flex gap-3">
+            <Input
+              classNames={{
+                base: 'w-auto sm:max-w-[44%]',
+                inputWrapper: 'border-1',
+              }}
+              placeholder="Search by name..."
+              size="md"
+              labelPlacement="outside"
+              color="primary"
+              value={search}
+              endContent={<SearchIcon />}
+              onClear={() => setSearch('')}
+              onValueChange={onSearchChange}
+            />
 
-          <div className="flex">
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
-                  Status
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                disallowEmptySelection
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {capitalize(status.key)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
+            <div className="flex">
+              <Dropdown>
+                <DropdownTrigger className="hidden sm:flex">
+                  <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
+                    Status
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Table Columns"
+                  closeOnSelect={false}
+                  selectedKeys={[statusFilter]}
+                  disallowEmptySelection
+                  selectionMode="multiple"
+                  onSelectionChange={setStatusFilter}
+                >
+                  {statusOptions.map((status) => (
+                    <DropdownItem key={status.uid} className="capitalize">
+                      {capitalize(status.key)}
+                    </DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+            <div className="flex">
+              <Button endContent={<PlusIcon className="text-small" />} variant="flat">
+                Add New
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -158,26 +198,28 @@ const TableView: React.FC = (data) => {
         classNames={{
           base: 'max-h-[850px]',
           table: 'min-h-[20px]',
-
         }}
-        className="h-[800px]"
+        className="h-[780px]"
         isHeaderSticky
-        // onSelectionChange={setSelectedKeys}
+        onSelectionChange={setSelectedKeys}
         selectedKeys={selectedKeys}
       >
-        <TableHeader columns={columns}>
-          {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+        <TableHeader columns={title}>
+          {title &&
+            title.map((header) => <TableColumn key={header.key}>{header.label}</TableColumn>)}
         </TableHeader>
+
         <TableBody
           emptyContent={'No products found'}
-          items={filteredItems}
-          className="overflow-hidden "
+          items={filteredItems as T[]}
+          className="overflow-hidden"
         >
-          {(item) => (
-            <TableRow key={item.id}>
-              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-          )}
+          {data &&
+            data.map((item) => (
+              <TableRow key={item.id}>
+                {(col) => <TableCell>{renderCell(item, col)}</TableCell>}
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </div>

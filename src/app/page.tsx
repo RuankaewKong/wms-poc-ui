@@ -3,6 +3,6 @@ import Image from 'next/image'
 
 export default function Home() {
   return (
-    <div className='text-xl m-5'><ModalView/></div>
+    <div className='text-xl m-5'>Hi</div>
   )
 }
