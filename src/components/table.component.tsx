@@ -27,12 +27,6 @@ import {
 } from '@nextui-org/react';
 
 import React, { use, useState } from 'react';
-import { PressEvent } from 'react-aria';
-import ModalView from './modal.component';
-import { Itim } from 'next/font/google';
-import { Order } from '@/types/order.interface';
-
-type Product = (typeof product)[0];
 
 const statusColorMap: Record<string, ChipProps['color']> = {
   Active: 'success',
@@ -52,9 +46,9 @@ interface TableProps<T> {
   onRowClick: (item: T) => void;
 }
 
-const TableView = <T extends Product | Order>({ title, data, page, onRowClick }: TableProps<T>) => {
+export function TableView<T>({ title, data, page, onRowClick }: TableProps<T>) {
   type Selection = Set<string> | 'all' | any;
-  const {  onOpen } = useDisclosure();
+  const { onOpen } = useDisclosure();
 
   const [search, setSearch] = React.useState('');
   const hasSearchFilter = Boolean(search);
@@ -171,7 +165,7 @@ const TableView = <T extends Product | Order>({ title, data, page, onRowClick }:
                 <DropdownMenu
                   aria-label="Table Columns"
                   closeOnSelect={false}
-                  selectedKeys={[statusFilter]}
+                  selectedKeys={statusFilter}
                   disallowEmptySelection
                   selectionMode="multiple"
                   onSelectionChange={setStatusFilter}
@@ -211,15 +205,14 @@ const TableView = <T extends Product | Order>({ title, data, page, onRowClick }:
 
         <TableBody
           emptyContent={'No products found'}
-          items={filteredItems as T[]}
+          items={filteredItems}
           className="overflow-hidden"
         >
-          {data &&
-            data.map((item) => (
-              <TableRow key={item.id}>
-                {(col) => <TableCell>{renderCell(item, col)}</TableCell>}
-              </TableRow>
-            ))}
+          {data.map((item,index) => (
+            <TableRow key={index}>
+              {(col) => <TableCell>{renderCell(item, col)}</TableCell>}
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>

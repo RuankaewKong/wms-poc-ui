@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   }).toString();
 
   const response = await fetch(
-    `${process.env.WMS_SERVICE_API_BASE_URL}/api/v1/warehouse/getOrder`,
+    `${process.env.DASHBOARD_SERVICE_API_BASE_URL}/api/v1/dashboard/getMetaData`,
     {
       method: 'GET',
       headers: {
@@ -20,27 +20,6 @@ export async function GET(request: NextRequest) {
 
   if(!response.ok)
   return NextResponse.json(await response.json(), { status: response.status })
-
   return NextResponse.json(await response.json());
 }
 
-export async function POST(request: Request) {
-
-  const response = await fetch(
-    `${process.env.WMS_SERVICE_API_BASE_URL}api/v1/warehouse/shipment_order`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(request.body),
-    },
-  );
-
-  if (!response.ok)
-    return NextResponse.json(await response.json(), {
-      status: response.status,
-    });
-
-  return NextResponse.json(await response.json());
-}

@@ -1,22 +1,24 @@
-export interface Order {
-  id: string;
+import { InOrder, InProduct } from "./product.interface";
+
+export interface OrderInfo {
+  id: number;
   orderId: string;
-  addressInfo: AddressInfo[];
-  orderItem: OrderItem[];
+  addressInfo: AddressInfo;
+  orderItem: OrderItem;
   quantity: number;
   amount: number;
   status: string;
-  createAt: Date;
-  updateAt: Date;
-  deleteAt: Date;
+  createAt: string;
+  updateAt: string;
+  deleteAt: string;
 }
 
 export interface OrderItem {
   id?: number;
-  nameBook: string;
-  price: number;
+  products: InOrder[];
   qty: number;
   total: number;
+
 }
 
 export interface AddressInfo {

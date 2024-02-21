@@ -17,6 +17,10 @@ const columns = [
     label: 'Book NO.',
   },
   {
+    key: 'price',
+    label: 'price',
+  },
+  {
     key: 'bookName',
     label: 'Name',
   },

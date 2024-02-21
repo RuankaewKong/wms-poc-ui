@@ -21,19 +21,21 @@ import { SearchIcon } from '@/icon/SearchIcon';
 type Props = {};
 const inter = Inter({ subsets: ['latin'] });
 
-const HeaderView: React.FC = () => {
+const HeaderComponent: React.FC = () => {
   return (
     <div className="col-span-6 ...">
-      <Navbar className='h-16' maxWidth="full" >
+      <Navbar className="h-16" maxWidth="full">
         <NavbarBrand className="flex m-5">
-          <Image
-            className="p-2 mr-4"
-            src={'https://storage.googleapis.com/itapp-publish/Logo/learncorp-logo-mobile.png'}
-            alt={'Learn Cop.'}
-            width={120}
-            height={80}
-            priority
-          />
+          <Link href="/">
+            <Image
+              className="p-2 mr-4"
+              src={'https://storage.googleapis.com/itapp-publish/Logo/learncorp-logo-mobile.png'}
+              alt={'Learn Cop.'}
+              width={120}
+              height={80}
+              priority
+            />
+          </Link>
           <NavbarContent className="flex sm:flex gap-4" justify="center">
             <NavbarItem>
               <Button isIconOnly color="secondary" className="hover:bg-sky-100 m-5">
@@ -82,4 +84,4 @@ const HeaderView: React.FC = () => {
   );
 };
 
-export default HeaderView;
+export default HeaderComponent;

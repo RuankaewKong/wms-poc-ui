@@ -26,3 +26,18 @@ export const animals = [
   {label: "Otter", value: "otter", description: "A carnivorous mammal in the subfamily Lutrinae"},
   {label: "Crocodile", value: "crocodile", description: "A large semiaquatic reptile"},
 ];
+export const datas = [
+  {
+    "label": "Ads",
+    "value": 32
+  },
+  {
+    "label": "Subscriptions",
+    "value": 45
+  },
+  {
+    "label": "Sponsorships",
+    "value": 23
+  }
+]
+

@@ -16,9 +16,11 @@
     "@nextui-org/system": "^2.0.15",
     "@nextui-org/table": "^2.0.28",
     "@nextui-org/theme": "^2.1.17",
+    "chart.js": "^4.4.1",
     "eslint-plugin-react-hooks": "^5.0.0-canary-08cd087ca-20240110",
     "framer-motion": "^10.17.9",
     "next": "14.0.4",
+    "next-auth": "^4.24.5",
     "react": "^18",
     "react-aria": "^3.31.0",
     "react-dom": "^18"
